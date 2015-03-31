@@ -1,4 +1,4 @@
-FROM ros:base
+FROM ros:indigo
 
 USER root
 

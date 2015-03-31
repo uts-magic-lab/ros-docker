@@ -19,6 +19,8 @@ RUN set -e; \
 # Setup ROS environment variables globally
 RUN echo 'source /opt/ros/indigo/setup.bash' >> /etc/bash.bashrc
 
+EXPOSE 11311
+
 # usability
 RUN echo 'alias ls="ls --color=auto"' >> /etc/bash.bashrc; \
     echo 'stty erase ^?' >> /etc/bash.bashrc; \
@@ -38,3 +40,5 @@ ENV EDITOR nano -wi
 #     rosdep init; \
 #     rosdep update; \
 #     rosdep fix-permissions
+
+CMD roscore

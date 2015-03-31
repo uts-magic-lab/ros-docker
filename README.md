@@ -7,6 +7,9 @@ This is a fully-automated installation script for [ROS](http://www.ros.org/) on 
 
 ### USAGE:
 
-    docker build -t ros:base - < ros-base.dockerfile
-    docker build -t ros:desktop - < ros-desktop.dockerfile
-    docker run -it -v $HOME:$HOME -e HOME=$HOME -w $PWD ros:desktop
+    docker build -t ros:indigo - < ros-base:indigo.dockerfile
+    docker tag ros:indigo ros
+    docker run -it -p 11311:11311 ros roscore
+
+    docker build -t ros-desktop:indigo - < ros-desktop:indigo.dockerfile
+    docker run -it -v $HOME:$HOME -e HOME=$HOME -w $PWD ros-desktop
