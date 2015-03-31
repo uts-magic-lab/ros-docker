@@ -18,8 +18,7 @@ RUN set -e; \
 
 # Setup ROS environment variables globally
 RUN echo 'source /opt/ros/indigo/setup.bash' >> /etc/bash.bashrc
-
-EXPOSE 11311
+# ENV BASH_ENV /opt/ros/indigo/setup.bash
 
 # usability
 RUN echo 'alias ls="ls --color=auto"' >> /etc/bash.bashrc; \
@@ -29,16 +28,18 @@ RUN echo 'alias ls="ls --color=auto"' >> /etc/bash.bashrc; \
     echo 'set show-all-if-ambiguous on' >> /etc/inputrc; \
     echo 'set completion-ignore-case on' >> /etc/inputrc
 ENV TERM xterm-color
-
-# Create nonprivileged user to run rosdep
-RUN useradd --create-home --shell=/bin/bash user
-USER user
 ENV EDITOR nano -wi
 
+# # Create nonprivileged user to run rosdep
+# RUN useradd --create-home --shell=/bin/bash user
+# USER user
+#
 # # Initialize rosdep
 # RUN set -e; \
 #     rosdep init; \
 #     rosdep update; \
 #     rosdep fix-permissions
 
-CMD roscore
+# Run roscore by default. 
+EXPOSE 11311
+CMD . /opt/ros/indigo/setup.sh; roscore
