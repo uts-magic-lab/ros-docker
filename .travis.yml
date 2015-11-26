@@ -16,7 +16,7 @@ env:
 
 script:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker build -t "magiclab/${ROS_DISTRO}" - < "ros-base:${ROS_DISTRO}.dockerfile"
+  - docker build -t "magiclab/ros:${ROS_DISTRO}" - < "ros-base:${ROS_DISTRO}.dockerfile"
 
 after_success:
-  - docker push "magiclab/${ROS_DISTRO}"
+  - docker push "magiclab/ros:${ROS_DISTRO}"
