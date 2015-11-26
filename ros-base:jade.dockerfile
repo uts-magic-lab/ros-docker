@@ -15,7 +15,7 @@ RUN apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xB01FA116 
 echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list && \
 echo "deb-src http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/ros-latest.list
 
-ENV ROS_DISTRO indigo
+ENV ROS_DISTRO jade
 
 # Install ROS base and rosinstall
 RUN apt-get update && \

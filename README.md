@@ -10,7 +10,6 @@ This is a fully-automated installation script for [ROS](http://www.ros.org/) on 
 Build the images:
 
     docker build -t ros:indigo - < ros-base:indigo.dockerfile
-    docker tag ros:indigo ros
     docker build -t ros-desktop:indigo - < ros-desktop:indigo.dockerfile
 
 Run ROS desktop in a container:
