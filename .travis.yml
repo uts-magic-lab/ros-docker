@@ -16,7 +16,7 @@ env:
 
 before_install:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker pull "magiclab/ros:${ROS_DISTRO}"
+  - docker pull "magiclab/ros:${ROS_DISTRO}" || true
 
 script:
   - docker build -t "magiclab/ros:${ROS_DISTRO}" - < "ros-base:${ROS_DISTRO}.dockerfile"

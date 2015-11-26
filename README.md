@@ -3,6 +3,8 @@ ros-docker
 
 Installation script for Robot Operating System
 
+[![Build Status](https://travis-ci.org/uts-magic-lab/ros-docker.svg?branch=master)](https://travis-ci.org/uts-magic-lab/ros-docker)
+
 This is a fully-automated installation script for [ROS](http://www.ros.org/) on [Docker](https://www.docker.com/). It is set to use the [boot2docker](http://boot2docker.io/) host as an X display, `bash` as the default shell, and `nano` as the default editor.
 
 ### USAGE:
