@@ -1,10 +1,10 @@
-FROM ubuntu:14.04
+FROM ubuntu:12.04
 MAINTAINER Jesse Clark <docker@jessejohnclark.com>
 
 # Register ROS repository
 RUN apt-key adv --keyserver hkp://pool.sks-keyservers.net --recv-key 0xB01FA116 && \
-echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list && \
-echo "deb-src http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/ros-latest.list
+echo "deb http://packages.ros.org/ros/ubuntu precise main" > /etc/apt/sources.list.d/ros-latest.list && \
+echo "deb-src http://packages.ros.org/ros/ubuntu precise main" >> /etc/apt/sources.list.d/ros-latest.list
 
 ENV ROS_DISTRO hydro
 
