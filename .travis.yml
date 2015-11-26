@@ -3,15 +3,20 @@ sudo: required
 services:
   - docker
 
+language: python
+
+python:
+  - "2.7"
+
 env:
   matrix:
-    - ROS_DISTRO=hydro USE_DEB=true ROS_PARALLEL_JOBS="-j2 -l2"
-#    - ROS_DISTRO=hydro USE_DEB=false ROS_PARALLEL_JOBS="-j2 -l2" NOT_TEST_INSTALL="true"
+    # - ROS_DISTRO=hydro USE_DEB=true ROS_PARALLEL_JOBS="-j2 -l2"
     - ROS_DISTRO=indigo USE_DEB=true ROS_PARALLEL_JOBS="-j8"
-#    - ROS_DISTRO=indigo USE_DEB=false ROS_PARALLEL_JOBS="-j8" NOT_TEST_INSTALL="true"
     - ROS_DISTRO=jade USE_DEB=true ROS_PARALLEL_JOBS="-j8"
-#    - ROS_DISTRO=jade USE_DEB=false ROS_PARALLEL_JOBS="-j8" NOT_TEST_INSTALL="true"
 
 script:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -t "magiclab/${ROS_DISTRO}" - < "ros-base:${ROS_DISTRO}.dockerfile"
+
+after_success:
+  - docker push "magiclab/${ROS_DISTRO}"
