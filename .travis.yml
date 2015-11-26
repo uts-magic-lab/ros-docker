@@ -25,3 +25,4 @@ script:
 
 after_success:
   - docker push "magiclab/ros:${ROS_DISTRO}"
+  - if [ -e ros-jsk:${ROS_DISTRO}.dockerfile ]; then docker push "magiclab/ros-jsk:${ROS_DISTRO}"
