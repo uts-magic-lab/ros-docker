@@ -10,12 +10,15 @@ python:
 
 env:
   matrix:
-    # - ROS_DISTRO=hydro USE_DEB=true ROS_PARALLEL_JOBS="-j2 -l2"
-    - ROS_DISTRO=indigo USE_DEB=true ROS_PARALLEL_JOBS="-j8"
-    - ROS_DISTRO=jade USE_DEB=true ROS_PARALLEL_JOBS="-j8"
+    - ROS_DISTRO=hydro ROS_PARALLEL_JOBS="-j2 -l2"
+    - ROS_DISTRO=indigo ROS_PARALLEL_JOBS="-j8"
+    - ROS_DISTRO=jade ROS_PARALLEL_JOBS="-j8"
+
+before_install:
+  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker pull "magiclab/ros:${ROS_DISTRO}"
 
 script:
-  - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker build -t "magiclab/ros:${ROS_DISTRO}" - < "ros-base:${ROS_DISTRO}.dockerfile"
 
 after_success:
