@@ -12,6 +12,7 @@ ENV ROS_DISTRO indigo
 RUN apt-get update && \
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
     nano \
+    python-catkin-tools \
     python-pip \
     python-rosinstall \
     ros-${ROS_DISTRO}-ros-base && \

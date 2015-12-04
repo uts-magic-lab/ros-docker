@@ -23,3 +23,8 @@ Run ROS core in a container and connect to it:
     docker run -it -p 11311:11311 ros
     export ROS_MASTER_URI=http://${DOCKER_HOST}:11311/
     rosrun turtlesim turtlesim_node
+
+Rebuild image when updates come out:
+
+    docker build --no-cache -t ros:indigo - < ros-base:indigo.dockerfile
+    docker build -t ros-desktop:indigo - < ros-desktop:indigo.dockerfile

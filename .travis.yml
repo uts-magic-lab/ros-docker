@@ -16,13 +16,15 @@ env:
 
 before_install:
   - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker pull "magiclab/ros:${ROS_DISTRO}" || true
-  - docker pull "magiclab/ros-jsk:${ROS_DISTRO}" || true
+  - docker pull "magiclab/ros:${ROS_DISTRO}" || echo "ok"
+  - docker pull "magiclab/ros-jsk:${ROS_DISTRO}" || echo "ok"
 
 script:
   - docker build -t "magiclab/ros:${ROS_DISTRO}" - < "ros-base:${ROS_DISTRO}.dockerfile"
+  - if [ -e ros-desktop:${ROS_DISTRO}.dockerfile ]; then docker build -t "magiclab/ros-desktop:${ROS_DISTRO}" - < "ros-desktop:${ROS_DISTRO}.dockerfile"; fi
   - if [ -e ros-jsk:${ROS_DISTRO}.dockerfile ]; then docker build -t "magiclab/ros-jsk:${ROS_DISTRO}" - < "ros-jsk:${ROS_DISTRO}.dockerfile"; fi
 
 after_success:
   - docker push "magiclab/ros:${ROS_DISTRO}"
-  - if [ -e ros-jsk:${ROS_DISTRO}.dockerfile ]; then docker push "magiclab/ros-jsk:${ROS_DISTRO}"
+  - if [ -e ros-desktop:${ROS_DISTRO}.dockerfile ]; then docker push "magiclab/ros-desktop:${ROS_DISTRO}"; fi
+  - if [ -e ros-jsk:${ROS_DISTRO}.dockerfile ]; then docker push "magiclab/ros-jsk:${ROS_DISTRO}"; fi

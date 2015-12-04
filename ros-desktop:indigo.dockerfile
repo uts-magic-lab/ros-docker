@@ -1,16 +1,16 @@
-FROM ros:indigo
+FROM magiclab/ros:indigo
 MAINTAINER Jesse Clark <docker@jessejohnclark.com>
 
 # Install ROS Desktop
 USER root
 RUN apt-get update && \
-DEBIAN_FRONTEND=noninteractive pt-get install -y \
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ros-${ROS_DISTRO}-desktop-full && \
 rm -rf /var/lib/apt/lists/*
 
 # X client doesn't like to run as root
 USER rosuser
-ENV DISPLAY 192.168.59.3:0
+ENV DISPLAY 192.168.99.3:0
 
 
 # # usability
