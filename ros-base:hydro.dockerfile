@@ -9,27 +9,32 @@ echo "deb-src http://packages.ros.org/ros/ubuntu precise main" >> /etc/apt/sourc
 ENV ROS_DISTRO hydro
 
 # Install ROS base and rosinstall
-RUN apt-get update && \
-DEBIAN_FRONTEND=noninteractive apt-get install -y \
+RUN apt-get update
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
     nano \
     python-pip \
     python-rosinstall \
-    ros-${ROS_DISTRO}-ros-base && \
-rm -rf /var/lib/apt/lists/*
+    ros-${ROS_DISTRO}-ros-base
+
+# Install goodies
+RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    ros-${ROS_DISTRO}-common-tutorials \
+    ros-${ROS_DISTRO}-rospy-tutorials \
+    ros-${ROS_DISTRO}-rosbridge-server
+
 RUN rosdep init
+
+# Setup ROS environment globally
+RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
 
 # Create nonprivileged user to run rosdep
 RUN useradd --create-home --shell=/bin/bash rosuser
 USER rosuser
 RUN rosdep update
 
-# Setup ROS environment variables globally
-# RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
-ENV BASH_ENV /opt/ros/${ROS_DISTRO}/setup.bash
 ENV TERM xterm-color
 ENV EDITOR nano -wi
 
-# Run roscore by default
+# Publish roscore and rosbridge port
 EXPOSE 11311
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["roscore"]
+EXPOSE 9090

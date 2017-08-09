@@ -18,18 +18,25 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
 rm -rf /var/lib/apt/lists/*
 RUN rosdep init
 
+# Install goodies
+RUN apt-get update && \
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    ros-${ROS_DISTRO}-common-tutorials \
+    ros-${ROS_DISTRO}-rospy-tutorials \
+    ros-${ROS_DISTRO}-rosbridge-server && \
+rm -rf /var/lib/apt/lists/*
+
+# Setup ROS environment variables globally
+RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
+
 # Create nonprivileged user to run rosdep
 RUN useradd --create-home --shell=/bin/bash rosuser
 USER rosuser
 RUN rosdep update
 
-# Setup ROS environment variables globally
-# RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
-ENV BASH_ENV /opt/ros/${ROS_DISTRO}/setup.bash
 ENV TERM xterm-color
 ENV EDITOR nano -wi
 
-# Run roscore by default
+# Publish roscore port
 EXPOSE 11311
-ENTRYPOINT ["/bin/bash", "-c"]
-CMD ["roscore"]
+EXPOSE 9090

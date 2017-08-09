@@ -53,6 +53,9 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ros-${ROS_DISTRO}-object-recognition-tabletop \
     ros-${ROS_DISTRO}-gazebo-ros-control
 
+ADD cobalt.tar.gz /
+RUN echo 'source /opt/pal/cobalt/setup.bash' >> /etc/bash.bashrc
+
 # Setup ROS environment globally
 RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
 
@@ -69,6 +72,7 @@ USER rosuser
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
 rosdep init && \
 rosdep update
+WORKDIR /home/rosuser
 
 # Build REEM workspace
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
@@ -84,11 +88,19 @@ rosdep install --from-paths src --ignore-src --rosdistro hydro -y && \
 catkin_make && \
 echo 'source ~/reem-sim_ws/devel/setup.bash' >> ~/.bashrc
 
-# TODO:
-# - comment out imu_sensor_controller in src/reem_robot/reem_controller_configuration/launch/default_controllers.launch
+# remove "imu_sensor_controller" so that it will launch successfully
+RUN sed -i.bak '/imu_sensor_controller/d' ~/reem-sim_ws/src/reem_robot/reem_controller_configuration/launch/default_controllers.launch
 
 ENV EDITOR nano -wi
 
 # Publish roscore and rosbridge port
 EXPOSE 11311
 EXPOSE 9090
+
+# To run simulation:
+# roslaunch reem_gazebo reem_empty_world.launch
+# do we need to write different launch file for rosbridge-only?
+
+RUN cd ~/reem-sim_ws/src && \
+git clone --recursive https://github.com/kunle12/pyride_reem.git && \
+git clone https://github.com/uts-magic-lab/pyride_common_msgs.git
