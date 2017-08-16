@@ -15,3 +15,10 @@ Build the image:
 Upload the image:
 
     docker push magiclab/ros-qi
+
+
+### Usage
+
+- run choreographe on host computer and get virtual robot port number
+- run ros-qi docker container with that port number 
+- run some python file inside docker container, with "import qi" and "import rospy"
