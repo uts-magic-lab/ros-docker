@@ -1,9 +1,8 @@
-#!/bin/sh
+#!/bin/sh -e
 
 pip_args=$(if [ -z "$VIRTUAL_ENV" ]; then echo '--user'; fi)
 
 set -x
-
 pip install \
 $pip_args \
 --upgrade \

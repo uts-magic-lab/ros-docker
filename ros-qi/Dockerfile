@@ -16,16 +16,18 @@ RUN easy_install pip && \
 # Setup ROS environment variables globally
 RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
 
+# Setup pynaoqi path globally
 ADD assets /usr/local/
-
 ADD pynaoqi-python2.7-2.5.5.5-linux64.tar.gz /usr/local
-RUN chmod -R +r /usr/local
-RUN echo 'export PYTHONPATH=/usr/local/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages/:$PYTHONPATH' >> /etc/bash.bashrc
+RUN chmod -R +r /usr/local && \
+find /usr/local -type d -exec chmod +x {} \; && \
+echo 'export PYTHONPATH=/usr/local/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages/:$PYTHONPATH' >> /etc/bash.bashrc
 
 # Create nonprivileged user to run rosdep
 RUN useradd --create-home --shell=/bin/bash rosuser
 USER rosuser
 RUN rosdep update
+
 WORKDIR /home/rosuser/
 
 # Interactive niceties
