@@ -1,0 +1,12 @@
+#!/bin/sh
+
+pip_args=$(if [ -z "$VIRTUAL_ENV" ]; then echo '--user'; fi)
+
+set -x
+
+pip install \
+$pip_args \
+--upgrade \
+--index-url http://blackhole.themagiclab.org:40080/simple \
+--trusted-host blackhole.themagiclab.org \
+$@

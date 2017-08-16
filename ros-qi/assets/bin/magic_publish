@@ -1,0 +1,17 @@
+#!/bin/sh -eu
+
+cd "${1:-.}"
+echo "Publishing python package in $(pwd)"
+
+rm -f ~/.pypirc
+echo '[distutils]' >> ~/.pypirc
+echo 'index-servers =' >> ~/.pypirc
+echo '  internal' >> ~/.pypirc
+echo '[internal]' >> ~/.pypirc
+echo repository: $PYPI_URL >> ~/.pypirc
+echo username: $PYPI_USERNAME >> ~/.pypirc
+echo password: $PYPI_PASSWORD >> ~/.pypirc
+
+python setup.py sdist register -r internal upload -r internal
+
+echo "Uploaded $(python setup.py --fullname)"

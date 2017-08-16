@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# For autocompletion when using IDE on host
+if [ ! -d /home/rosuser/indigo/lib/python2.7/dist-packages ]; then
+    mkdir -p /home/rosuser/indigo/lib/python2.7/dist-packages
+    cp -R /opt/ros/indigo/lib/python2.7/dist-packages/ /home/rosuser/indigo/lib/python2.7/
+fi
+
+# # This stuff is only necessary when working with catkin projects
+# # Re-enable in future if needed
+# if [ ! -d /home/rosuser/catkin_ws/src ]; then
+#     (
+#         mkdir -p /home/rosuser/catkin_ws/src
+#         cd /home/rosuser/catkin_ws/src
+#         catkin_init_workspace &> /dev/null || echo error with catkin_init_workspace
+#     )
+# fi
+# (
+#     cd /home/rosuser/catkin_ws
+#     catkin_make &> /dev/null || echo error with catkin_make
+# )
+# source '/home/rosuser/catkin_ws/devel/setup.bash'
+# source '/opt/ros/indigo/setup.bash'
+
+if [ ! -d /home/rosuser/jupyter_notebook ]; then
+    mkdir /home/rosuser/jupyter_notebook
+fi
+(
+    cd /home/rosuser/jupyter_notebook
+    nohup jupyter notebook --ip 0.0.0.0 --no-browser --NotebookApp.token='ros' &> jupyter_notebook.log  &
+)
+
+nohup roslaunch rosbridge_server rosbridge_websocket.launch &> rosbridge_server.log &
+
+if [ $# -gt 0 ]; then
+	sleep 2
+	exec "$@"
+else
+	exec /bin/bash
+fi
+
+# TODO: if no arguments (and no terminal?) wait on some open process

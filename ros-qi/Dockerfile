@@ -1,28 +1,10 @@
-FROM ubuntu:14.04
+FROM ros:indigo-perception
 
-# Register ROS repository
-RUN apt-key adv --keyserver hkp://pgp.mit.edu:80 --recv-key 0xB01FA116 && \
-echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list && \
-echo "deb-src http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" >> /etc/apt/sources.list.d/ros-latest.list
-
-ENV ROS_DISTRO indigo
-
-# Install ROS base and rosinstall
 RUN apt-get update && \
 DEBIAN_FRONTEND=noninteractive apt-get install -y \
     nano \
-    python-pip \
-    python-rosinstall \
-    ros-${ROS_DISTRO}-ros-base && \
-rm -rf /var/lib/apt/lists/*
-RUN rosdep init
-
-# Install goodies
-RUN apt-get update && \
-DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    ros-${ROS_DISTRO}-common-tutorials \
-    ros-${ROS_DISTRO}-rospy-tutorials \
-    ros-${ROS_DISTRO}-rosbridge-server && \
+    ros-indigo-rosbridge-suite \
+    ros-indigo-web-video-server && \
 rm -rf /var/lib/apt/lists/*
 
 # Setup ROS environment variables globally
@@ -33,13 +15,25 @@ RUN useradd --create-home --shell=/bin/bash rosuser
 USER rosuser
 RUN rosdep update
 
+WORKDIR /home/rosuser/
+
+ADD assets /usr/local/
+ADD pynaoqi-python2.7-2.5.5.5-linux64.tar.gz /home/rosuser/pynaoqi
+USER root
+RUN chown -R rosuser /home/rosuser/pynaoqi
+RUN echo 'export PYTHONPATH=/home/rosuser/pynaoqi/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages/:$PYTHONPATH' >> /etc/bash.bashrc
+USER rosuser
+
 ENV TERM xterm-color
 ENV EDITOR nano -wi
 
 # Publish roscore port
 EXPOSE 11311
 EXPOSE 9090
+EXPOSE 8080
+EXPOSE 8888
 
+ENTRYPOINT ["/usr/local/bin/ros_entrypoint"]
 
 
 ### TODO:
