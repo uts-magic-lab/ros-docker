@@ -33,7 +33,7 @@ fi
 nohup roslaunch rosbridge_server rosbridge_websocket.launch &> rosbridge_server.log &
 
 if [ $# -gt 0 ]; then
-	sleep 2
+	sleep 2 # give roscore time to start
 	exec "$@"
 else
 	exec /bin/bash

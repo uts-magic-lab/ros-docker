@@ -1,5 +1,15 @@
 #!/bin/sh -e
 
+# # load server key fingerprint for internal gitlab
+# file=$(mktemp)
+# ssh-keyscan -p 30022 blackhole.themagiclab.org > $file 2>/dev/null
+# ssh-keygen -l -f $file
+# rm $file
+# 
+# # load private key
+# eval $(ssh-agent -s)
+# ssh-add <(echo "$SSH_PRIVATE_KEY")
+
 pip_args=$(if [ -z "$VIRTUAL_ENV" ]; then echo '--user'; fi)
 
 set -x
