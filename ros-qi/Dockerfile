@@ -11,21 +11,19 @@ rm -rf /var/lib/apt/lists/*
 
 # Install pip packages
 RUN easy_install pip && \
-pip install --upgrade setuptools && \
-pip install 'ipython[notebook]<=6.0'
+pip install --upgrade \
+    setuptools \
+    requests[security] \
+    'ipython[notebook]<=6.0'
 
 # Create nonprivileged user to run rosdep
-RUN useradd --create-home --shell=/bin/bash rosuser && \
-sudo -u rosuser -H rosdep update
-
-# Setup ROS environment variables globally
-RUN ln -s /opt/ros/${ROS_DISTRO}/setup.sh /etc/profile.d/ros-setup.sh
+RUN useradd --create-home --shell=/bin/bash rosuser
+# RUN sudo -u rosuser -H rosdep update
 
 # Install pynaoqi and add to global environment
 ADD pynaoqi-python2.7-2.5.5.5-linux64.tar.gz /usr/local/
 RUN chmod -R +r /usr/local && \
-find /usr/local -type d -exec chmod +x {} \; && \
-echo 'export PYTHONPATH=/usr/local/pynaoqi-python2.7-2.5.5.5-linux64/lib/python2.7/site-packages/:$PYTHONPATH' > /etc/profile.d/qi-setup.sh
+find /usr/local -type d -exec chmod +x {} \;
 
 # Add scripts from this package
 ADD assets /
