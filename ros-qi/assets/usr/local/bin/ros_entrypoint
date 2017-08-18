@@ -1,13 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
-# For autocompletion when using IDE on host
-if [ ! -d /home/rosuser/indigo/lib/python2.7/dist-packages ]; then
-    mkdir -p /home/rosuser/indigo/lib/python2.7/dist-packages
-    cp -R /opt/ros/indigo/lib/python2.7/dist-packages/ /home/rosuser/indigo/lib/python2.7/
-fi
+. /etc/profile
 
-# # This stuff is only necessary when working with catkin projects
-# # Re-enable in future if needed
+# # For autocompletion when using IDE on host
+# if [ ! -d /home/rosuser/indigo/lib/python2.7/dist-packages ]; then
+#     mkdir -p /home/rosuser/indigo/lib/python2.7/dist-packages
+#     cp -R /opt/ros/indigo/lib/python2.7/dist-packages/ /home/rosuser/indigo/lib/python2.7/
+# fi
+
+# # For working with catkin projects
 # if [ ! -d /home/rosuser/catkin_ws/src ]; then
 #     (
 #         mkdir -p /home/rosuser/catkin_ws/src
@@ -27,16 +28,17 @@ if [ ! -d /home/rosuser/jupyter_notebook ]; then
 fi
 (
     cd /home/rosuser/jupyter_notebook
-    nohup jupyter notebook --ip 0.0.0.0 --no-browser --NotebookApp.token='ros' &> jupyter_notebook.log  &
+    nohup jupyter notebook --ip 0.0.0.0 --no-browser --NotebookApp.token='ros' > jupyter_notebook.log 2>&1 &
 )
 
-nohup roslaunch rosbridge_server rosbridge_websocket.launch &> rosbridge_server.log &
+nohup roslaunch rosbridge_server rosbridge_websocket.launch > rosbridge_server.log 2>&1 &
 
 if [ $# -gt 0 ]; then
-	sleep 2 # give roscore time to start
-	exec "$@"
+    sleep 1 # give roscore time to start
+    exec "$@"
 else
-	exec /bin/bash
+    shell=$(getent passwd $(whoami) | cut -d: -f7)
+    exec $shell
 fi
 
 # TODO: if no arguments (and no terminal?) wait on some open process
