@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# source all /etc/profile.d/ scripts
 . /etc/profile
 
 # # For autocompletion when using IDE on host
@@ -20,25 +21,31 @@
 #     cd /home/rosuser/catkin_ws
 #     catkin_make &> /dev/null || echo error with catkin_make
 # )
-# source '/home/rosuser/catkin_ws/devel/setup.bash'
-# source '/opt/ros/indigo/setup.bash'
 
-if [ ! -d /home/rosuser/jupyter_notebook ]; then
-    mkdir /home/rosuser/jupyter_notebook
-fi
-(
-    cd /home/rosuser/jupyter_notebook
-    nohup jupyter notebook --ip 0.0.0.0 --no-browser --NotebookApp.token='ros' > jupyter_notebook.log 2>&1 &
-)
+# Start Jupyter in background
+mkdir -p ~/jupyter_notebook
+cd ~/jupyter_notebook
+jupyter notebook --ip 0.0.0.0 --no-browser --NotebookApp.token='ros' > ~/jupyter_notebook.log 2>&1 &
+jupyter_pid=$!
+cd
 
-nohup roslaunch rosbridge_server rosbridge_websocket.launch > rosbridge_server.log 2>&1 &
+# Start rosbridge in background
+roslaunch rosbridge_server rosbridge_websocket.launch > ~/rosbridge_server.log 2>&1 &
+ros_pid=$!
 
+
+# when run with some command: start that command
 if [ $# -gt 0 ]; then
     sleep 1 # give roscore time to start
     exec "$@"
-else
-    shell=$(getent passwd $(whoami) | cut -d: -f7)
-    exec $shell
-fi
 
-# TODO: if no arguments (and no terminal?) wait on some open process
+# when run with a terminal and no command: start a shell
+elif [ -t 0 ]; then
+    shell=$(getent passwd $(whoami) | cut -d: -f7)
+    exec $shell -l
+
+# otherwise: wait on child processes
+else
+    tail -qF *.log &
+    wait $ros_pid $jupyter_pid
+fi

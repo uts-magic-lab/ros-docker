@@ -9,11 +9,15 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ros-indigo-web-video-server && \
 rm -rf /var/lib/apt/lists/*
 
+# Install pip
+RUN curl -O https://bootstrap.pypa.io/get-pip.py && \
+python get-pip.py && \
+rm get-pip.py
+
 # Install pip packages
-RUN easy_install pip && \
-pip install --upgrade \
+RUN pip install --upgrade \
     setuptools \
-    requests[security] \
+    'requests[security]' \
     'ipython[notebook]<=6.0'
 
 # Create nonprivileged user to run rosdep
