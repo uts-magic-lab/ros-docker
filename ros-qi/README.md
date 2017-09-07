@@ -19,6 +19,10 @@ Upload the image:
 
 ### Usage
 
-- run choreographe on host computer and get virtual robot port number
-- run ros-qi docker container with that port number 
-- run some python file inside docker container, with "import qi" and "import rospy"
+- Run ros-qi docker container with
+
+        docker run -it --name ros --rm -p 8888:8888 -p9090:9090 -p11311:11311 magiclab/ros-qi
+
+- Navigate to [http://localhost:8888/](http://localhost:8888/) and use the password `ros`
+
+- Run some python code, with `import qi` and `import rospy`. Open a `qi` session with the URI of a pepper or choreographe simulation.
