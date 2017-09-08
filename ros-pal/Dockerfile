@@ -101,6 +101,14 @@ EXPOSE 9090
 # roslaunch reem_gazebo reem_empty_world.launch
 # do we need to write different launch file for rosbridge-only?
 
-RUN cd ~/reem-sim_ws/src && \
-git clone --recursive https://github.com/kunle12/pyride_reem.git && \
-git clone https://github.com/uts-magic-lab/pyride_common_msgs.git
+RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
+cd ~/reem-sim_ws/src && \
+git clone https://github.com/uts-magic-lab/pyride_common_msgs.git && \
+cd ~/reem-sim_ws && \
+catkin_make
+
+# RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
+# cd ~/reem-sim_ws/src && \
+# git clone --recursive https://github.com/kunle12/pyride_reem.git && \
+# cd ~/reem-sim_ws && \
+# catkin_make
