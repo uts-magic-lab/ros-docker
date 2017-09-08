@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# source all /etc/profile.d/ scripts
+. /etc/profile
+
+# Start rosbridge in background
+roslaunch rosbridge_server rosbridge_websocket.launch > ~/rosbridge_server.log 2>&1 &
+ros_pid=$!
+
+# when run with some command: start that command
+if [ $# -gt 0 ]; then
+    sleep 1 # give roscore time to start
+    exec "$@"
+
+# when run with a terminal and no command: start a shell
+elif [ -t 0 ]; then
+    shell=$(getent passwd $(whoami) | cut -d: -f7)
+    exec $shell -l
+
+# otherwise: wait on child processes
+else
+    tail -qF *.log &
+    wait $ros_pid
+fi

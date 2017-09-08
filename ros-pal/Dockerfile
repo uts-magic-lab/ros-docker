@@ -53,26 +53,15 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ros-${ROS_DISTRO}-object-recognition-tabletop \
     ros-${ROS_DISTRO}-gazebo-ros-control
 
-ADD cobalt.tar.gz /
-RUN echo 'source /opt/pal/cobalt/setup.bash' >> /etc/bash.bashrc
-
-# Setup ROS environment globally
-RUN echo 'source /opt/ros/${ROS_DISTRO}/setup.bash' >> /etc/bash.bashrc
-
 # Create nonprivileged user
-RUN useradd --create-home --shell=/bin/bash rosuser && \
-echo 'rosuser ALL=(ALL) NOPASSWD:ALL' > /etc/sudoers.d/rosuser && \
-chmod 440 /etc/sudoers.d/rosuser && \
-mkdir -p /etc/ros/rosdep/sources.list.d && \
-chgrp -R rosuser /etc/ros && \
-chmod -R g+w /etc/ros
+RUN useradd --create-home --shell=/bin/bash rosuser
 
 # Run rosdep
+RUN rosdep init
 USER rosuser
-RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
-rosdep init && \
-rosdep update
 WORKDIR /home/rosuser
+RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
+rosdep update
 
 # Build REEM workspace
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
@@ -85,8 +74,7 @@ wstool update -j8
 RUN . "/opt/ros/${ROS_DISTRO}/setup.sh" && \
 cd ~/reem-sim_ws && \
 rosdep install --from-paths src --ignore-src --rosdistro hydro -y && \
-catkin_make && \
-echo 'source ~/reem-sim_ws/devel/setup.bash' >> ~/.bashrc
+catkin_make
 
 # remove "imu_sensor_controller" so that it will launch successfully
 RUN sed -i.bak '/imu_sensor_controller/d' ~/reem-sim_ws/src/reem_robot/reem_controller_configuration/launch/default_controllers.launch
@@ -112,3 +100,8 @@ catkin_make
 # git clone --recursive https://github.com/kunle12/pyride_reem.git && \
 # cd ~/reem-sim_ws && \
 # catkin_make
+
+ADD cobalt.tar.gz /
+ADD assets /
+
+ENTRYPOINT ["/usr/local/bin/ros_entrypoint"]
