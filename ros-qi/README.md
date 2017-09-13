@@ -13,7 +13,7 @@ Clone this repository (the git command below is easier, but if you don't have gi
 
 Download [`pynaoqi-python2.7-2.5.5.5-linux64.tar.gz`](https://developer.softbankrobotics.com/Software/Python/2.5.5/Linux/pynaoqi-python2.7-2.5.5.5-linux64.tar.gz) into this folder.
 
-Build the image:
+Build the image (you may need to run these commands with as root or Administrator or with sudo):
 
     docker build -t magiclab/ros-qi .
 
