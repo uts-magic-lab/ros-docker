@@ -6,7 +6,12 @@ This is used for automatic testing and packaging.
 
 ### Development
 
-Download `pynaoqi-python2.7-2.5.5.5-linux64.tar.gz` into this folder.
+Clone this repository (the git command below is easier, but if you don't have git you can also just [download](https://github.com/uts-magic-lab/ros-docker/archive/master.zip), unzip and then change to the ros-qi directory manually):
+
+    git clone https://github.com/uts-magic-lab/ros-docker.git
+    cd ros-docker/ros-qi
+
+Download [`pynaoqi-python2.7-2.5.5.5-linux64.tar.gz`](https://developer.softbankrobotics.com/Software/Python/2.5.5/Linux/pynaoqi-python2.7-2.5.5.5-linux64.tar.gz) into this folder.
 
 Build the image:
 
