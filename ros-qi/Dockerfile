@@ -18,7 +18,9 @@ rm get-pip.py
 RUN pip install --upgrade \
     setuptools \
     'requests[security]' \
-    'ipython[notebook]<=6.0'
+    'ipython[notebook]<=6.0' \
+    scipy \
+    websocket
 
 # Create nonprivileged user to run rosdep
 RUN useradd --create-home --shell=/bin/bash rosuser
