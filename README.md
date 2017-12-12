@@ -18,6 +18,13 @@ Run ROS desktop in a container:
 
     docker run -it -v $HOME:$HOME -e HOME=$HOME -w $PWD ros-desktop
 
+Run ROS desktop in a container so that rviz and X work (if rviz does not render properly, kill it with Control-C and start it again):
+
+    XAUTH=/tmp/.docker.xauth
+    touch $XAUTH
+    xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $XAUTH nmerge -
+    sudo docker run -it -v $HOME:$HOME -e HOME=$HOME -w $PWD -e DISPLAY -v /tmp/.X11-unix:/tmp/.X11-unix -v $XAUTH:$XAUTH -e XAUTHORITY=${XAUTH} -e QT_X11_NO_MITSHM=1 ros-desktop:indigo
+
 Run ROS core in a container and connect to it:
 
     docker run -it -p 11311:11311 ros
