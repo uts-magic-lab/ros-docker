@@ -4,7 +4,7 @@ MAINTAINER Jesse Clark <docker@jessejohnclark.com>
 # Install ROS Desktop
 USER root
 RUN apt-get update && \
-DEBIAN_FRONTEND=noninteractive pt-get install -y \
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
     ros-${ROS_DISTRO}-desktop-full && \
 rm -rf /var/lib/apt/lists/*
 
